@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bank.bankmanagement.model.Account;
 import com.bank.bankmanagement.service.AccountService;
+import com.bank.bankmanagement.security.JwtUtil;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -33,18 +34,22 @@ public class AccountController {
     }
 
     // LOGIN API
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Account account) {
+ @PostMapping("/login")
+public ResponseEntity<String> login(@RequestBody Account account) {
 
-        boolean success = accountService.login(
-                account.getAccountNo(),
-                account.getPin()
+    boolean success = accountService.login(
+            account.getAccountNo(),
+            account.getPin()
+    );
+
+    if (success) {
+        String token = JwtUtil.generateToken(
+                String.valueOf(account.getAccountNo()),
+                "USER"
         );
-
-        if (success) {
-            return ResponseEntity.ok("Login successful");
-        } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
-        }
+        return ResponseEntity.ok(token);
+    } else {
+        return ResponseEntity.status(401).body("Invalid credentials");
     }
+}
 }
