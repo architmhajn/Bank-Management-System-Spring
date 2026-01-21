@@ -1,23 +1,41 @@
 package com.bank.bankmanagement.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-
+import java.security.Key;
 import java.util.Date;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 
 public class JwtUtil {
 
-    private static final String SECRET = "bank-secret-key";
-    private static final long EXPIRATION = 1000 * 60 * 60; // 1 hour
+    private static final String SECRET = "thisIsASecretKeyForJwtGeneration12345";
+    private static final Key KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
 
-    public static String generateToken(String username, String role) {
+    public static String generateToken(String subject) {
 
         return Jwts.builder()
-                .setSubject(username)
-                .claim("role", role)
+                .setSubject(subject)   // ADMIN
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .signWith(KEY)
                 .compact();
+    }
+
+    public static Claims extractClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public static boolean validateToken(String token) {
+        extractClaims(token);
+        return true;
+    }
+
+    public static String extractRole(String token) {
+        return extractClaims(token).getSubject(); // ADMIN
     }
 }

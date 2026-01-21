@@ -16,24 +16,15 @@ public class AccountService {
         this.accountDAO = accountDAO;
     }
 
-    public boolean createAccount(Account account) {
-        return accountDAO.createAccount(account) == 1;
+    public void create(Account account) {
+        accountDAO.save(account);
     }
 
-    public boolean login(int accountNo, int pin) {
+    public Account login(int accountNo, String pin) {
         return accountDAO.login(accountNo, pin);
     }
 
-    // ADMIN SERVICES
     public List<Account> getAllAccounts() {
-        return accountDAO.getAllAccounts();
-    }
-
-    public boolean blockAccount(int accountNo) {
-        return accountDAO.updateStatus(accountNo, "BLOCKED") == 1;
-    }
-
-    public boolean unblockAccount(int accountNo) {
-        return accountDAO.updateStatus(accountNo, "ACTIVE") == 1;
+        return accountDAO.findAll();
     }
 }

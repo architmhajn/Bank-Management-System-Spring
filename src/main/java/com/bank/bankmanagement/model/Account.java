@@ -4,19 +4,9 @@ public class Account {
 
     private int accountNo;
     private String name;
-    private int pin;
+    private String pin;   // STRING (hashed or plain for now)
     private double balance;
     private String status;
-
-    public Account() {}
-
-    public Account(int accountNo, String name, int pin, double balance, String status) {
-        this.accountNo = accountNo;
-        this.name = name;
-        this.pin = pin;
-        this.balance = balance;
-        this.status = status;
-    }
 
     public int getAccountNo() {
         return accountNo;
@@ -34,11 +24,11 @@ public class Account {
         this.name = name;
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
 

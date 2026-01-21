@@ -2,17 +2,11 @@ package com.bank.bankmanagement.controller;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bank.bankmanagement.model.Account;
-import com.bank.bankmanagement.security.JwtUtil;
 import com.bank.bankmanagement.service.AccountService;
 
 @RestController
@@ -25,47 +19,8 @@ public class AdminController {
         this.accountService = accountService;
     }
 
-    // VIEW ALL ACCOUNTS
     @GetMapping("/accounts")
     public List<Account> getAllAccounts() {
         return accountService.getAllAccounts();
     }
-
-    // BLOCK ACCOUNT
-    @PutMapping("/block/{accountNo}")
-    public ResponseEntity<String> blockAccount(@PathVariable int accountNo) {
-
-        boolean blocked = accountService.blockAccount(accountNo);
-
-        if (blocked) {
-            return ResponseEntity.ok("Account blocked successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Account not found");
-        }
-    }
-
-    // UNBLOCK ACCOUNT
-    @PutMapping("/unblock/{accountNo}")
-    public ResponseEntity<String> unblockAccount(@PathVariable int accountNo) {
-
-        boolean unblocked = accountService.unblockAccount(accountNo);
-
-        if (unblocked) {
-            return ResponseEntity.ok("Account unblocked successfully");
-        } else {
-            return ResponseEntity.badRequest().body("Account not found");
-        }
-    }
-
-    @PostMapping("/login")
-public ResponseEntity<String> adminLogin(@RequestBody Account account) {
-
-    if (account.getAccountNo() == 9999 && account.getPin() == 1234) {
-
-        String token = JwtUtil.generateToken("admin", "ADMIN");
-        return ResponseEntity.ok(token);
-    }
-    return ResponseEntity.status(401).body("Invalid admin credentials");
-}
-
 }
