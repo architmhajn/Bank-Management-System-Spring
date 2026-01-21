@@ -1,5 +1,7 @@
 package com.bank.bankmanagement.dao;
 
+import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +19,6 @@ public class AccountDAO {
 
     // CREATE ACCOUNT
     public int createAccount(Account account) {
-
         String sql = """
             INSERT INTO accounts (account_no, name, pin, balance, status)
             VALUES (?, ?, ?, ?, ?)
@@ -35,7 +36,6 @@ public class AccountDAO {
 
     // LOGIN
     public boolean login(int accountNo, int pin) {
-
         String sql = """
             SELECT COUNT(*) FROM accounts
             WHERE account_no = ? AND pin = ? AND status = 'ACTIVE'
@@ -49,5 +49,26 @@ public class AccountDAO {
         );
 
         return count != null && count == 1;
+    }
+
+    // VIEW ALL ACCOUNTS (ADMIN)
+    public List<Account> getAllAccounts() {
+        String sql = "SELECT account_no, name, balance, status FROM accounts";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new Account(
+                        rs.getInt("account_no"),
+                        rs.getString("name"),
+                        0,                       // PIN hidden
+                        rs.getDouble("balance"),
+                        rs.getString("status")
+                )
+        );
+    }
+
+    // UPDATE ACCOUNT STATUS (ADMIN)
+    public int updateStatus(int accountNo, String status) {
+        String sql = "UPDATE accounts SET status = ? WHERE account_no = ?";
+        return jdbcTemplate.update(sql, status, accountNo);
     }
 }

@@ -1,5 +1,7 @@
 package com.bank.bankmanagement.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.bank.bankmanagement.dao.AccountDAO;
@@ -20,5 +22,18 @@ public class AccountService {
 
     public boolean login(int accountNo, int pin) {
         return accountDAO.login(accountNo, pin);
+    }
+
+    // ADMIN SERVICES
+    public List<Account> getAllAccounts() {
+        return accountDAO.getAllAccounts();
+    }
+
+    public boolean blockAccount(int accountNo) {
+        return accountDAO.updateStatus(accountNo, "BLOCKED") == 1;
+    }
+
+    public boolean unblockAccount(int accountNo) {
+        return accountDAO.updateStatus(accountNo, "ACTIVE") == 1;
     }
 }
