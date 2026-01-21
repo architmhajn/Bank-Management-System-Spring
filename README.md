@@ -200,7 +200,7 @@ http://localhost:8080
 
 **Archit Mahajan**
 B.Tech – Artificial Intelligence
-Focused on **Backend Development, Spring Boot, and Secure Systems**
+
 
 ---
 
