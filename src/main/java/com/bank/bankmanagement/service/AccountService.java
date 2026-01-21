@@ -17,4 +17,8 @@ public class AccountService {
     public boolean createAccount(Account account) {
         return accountDAO.createAccount(account) == 1;
     }
+
+    public boolean login(int accountNo, int pin) {
+        return accountDAO.login(accountNo, pin);
+    }
 }

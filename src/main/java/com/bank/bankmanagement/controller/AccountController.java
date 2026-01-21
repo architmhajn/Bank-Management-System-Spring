@@ -19,6 +19,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    // CREATE ACCOUNT API
     @PostMapping
     public ResponseEntity<String> createAccount(@RequestBody Account account) {
 
@@ -28,6 +29,22 @@ public class AccountController {
             return ResponseEntity.ok("Account created successfully");
         } else {
             return ResponseEntity.badRequest().body("Account creation failed");
+        }
+    }
+
+    // LOGIN API
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody Account account) {
+
+        boolean success = accountService.login(
+                account.getAccountNo(),
+                account.getPin()
+        );
+
+        if (success) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
 }

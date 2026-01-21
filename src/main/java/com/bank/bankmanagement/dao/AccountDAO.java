@@ -15,6 +15,7 @@ public class AccountDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // CREATE ACCOUNT
     public int createAccount(Account account) {
 
         String sql = """
@@ -30,5 +31,23 @@ public class AccountDAO {
                 0.0,
                 "ACTIVE"
         );
+    }
+
+    // LOGIN
+    public boolean login(int accountNo, int pin) {
+
+        String sql = """
+            SELECT COUNT(*) FROM accounts
+            WHERE account_no = ? AND pin = ? AND status = 'ACTIVE'
+        """;
+
+        Integer count = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                accountNo,
+                HashUtil.hashPin(String.valueOf(pin))
+        );
+
+        return count != null && count == 1;
     }
 }
